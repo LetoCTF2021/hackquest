@@ -54,14 +54,19 @@
 </template>
 
 <script>
+
 const formItemLayout = {
   labelCol: { span: 4 },
   wrapperCol: { span: 8 },
 };
+
 const formTailLayout = {
   labelCol: { span: 4 },
   wrapperCol: { span: 8, offset: 4 },
-};
+}
+
+import ApiService from '@/api/service'
+
 export default {
   props: ["linkName"],
   data() {
@@ -73,11 +78,23 @@ export default {
     };
   },
   methods: {
-    check() {
+    check () {
       this.form.validateFields((err) => {
         if (!err) {
+          ApiService.post('loginGame', Object.assign({}, {
+            username: this.form.instances.username.value,
+            password: this.form.instances.password.value
+          }))
+            .then(async ({data}) => {
+              if (data.error) {
+                this.$message.error(data.error)
+              } else if (data.token) {
+                await localStorage.setItem('token', data.token)
+                await this.$router.push(this.linkName)
+              }
+            })
           console.info("success");
-          this.$router.push(this.linkName)
+          //this.$router.push(this.linkName)
         }
       });
     },

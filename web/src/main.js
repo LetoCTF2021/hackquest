@@ -39,11 +39,18 @@ import {
   Button,
   Icon,
   Col,
-  Row
+  Row,
+  Modal,
+  Popconfirm,
+  message
 } from 'ant-design-vue'
 
+Vue.prototype.$message = message;
+Vue.prototype.$confirm = Modal.confirm;
 Vue.config.productionTip = false
 
+Vue.use(Popconfirm)
+Vue.use(Modal)
 Vue.use(Form)
 Vue.use(FormModel)
 Vue.use(Input)
