@@ -39,7 +39,6 @@
   </a-modal>
   <div class="blocks">
     <div> Задачи: {{data.solved.length}}/5 | {{data.name}} | Score: {{data.score}} </div>
-    {{quest}}
     <div>
       <a-button type="primary" v-if="data.solved.length === 0" @click="getQuest">
         Старт
@@ -151,6 +150,7 @@ export default {
         .then(({data}) => {
           if (data.status && data.status === 'done') {
             console.log('okk')
+            alert('Вы прошли всем точки! Возвращайтесь :3')
           } else {
             this.position.lat = data.coords[0]
             this.position.lng = data.coords[1]
@@ -159,6 +159,26 @@ export default {
             this.getActualQuest()
           }
         })
+    },
+    onSearch (value) {
+      if (value) {
+      ApiService.post('flag', {
+        questId: this.quest.questId,
+        flag: value
+      })
+        .then(async ({data}) =>{
+          if (data.status === 'ok') {
+            this.$message.success('Флаг успешно сдан!');
+            await this.getQuest()
+            await this.getActualInfo()
+            await this.getActualQuest()
+          } else {
+            this.$message.warning('Флаг неверный!');
+          }
+        })
+      } else {
+        this.$message.warning('Флаг пустой')
+      }
     },
     async getLocation() {
       
@@ -177,7 +197,6 @@ export default {
       });
     },
     async locateMe() {
-
       this.gettingLocation = true;
       try {
         this.gettingLocation = false;
@@ -212,9 +231,6 @@ export default {
         onCancel() {},
         class: 'test',
       })
-    },
-    onSearch () {
-      console.log(12)
     }
   },
   async mounted () {

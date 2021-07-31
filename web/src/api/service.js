@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-axios.defaults.baseURL = axios.defaults.baseURL = process.env.API_URL || 'http://192.168.88.245:8081'
+axios.defaults.baseURL = axios.defaults.baseURL = process.env.API_URL || 'http://localhost:8081'
 
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 axios.defaults.headers.put['Content-Type'] = 'application/json'
