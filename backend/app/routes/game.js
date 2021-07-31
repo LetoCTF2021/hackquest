@@ -72,6 +72,32 @@ module.exports = function (app, db) {
             res.send({ 'error': 'Чет не так' })
         }
     })
+    app.post('/flag', (req, res) => {
+        let id = req.body.questId;
+        let flag = req.body.flag
+        if (flag && id) {
+            db.collection('questions').findOne({
+                _id: ObjectId(id),
+                flag: flag
+            }, (err, task) => {
+                console.log(task)
+                if (task) {
+                    res.send({ status: 'ok' })
+                    db.collection('questions').updateOne({ _id: ObjectId(id) }, {
+                        $set: {
+                            taskTime: new Date()
+                        }
+                    })
+                } else {
+                    res.send({ status: 'neok' })
+                }
+                return
+            })
+        } else {
+            res.send({ status: 'ne ok' })
+            return
+        }
+    })
     app.get('/actualQuest', (req, res) => {
         try {
             let id = req.token;
